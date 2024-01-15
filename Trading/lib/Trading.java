@@ -1,4 +1,4 @@
-package Bank.lib;
+package Trading.lib;
 // This project is a Investment system,it is used to keep track of the stock price after each trading day. A user
 //Enters a buyin price and the closing price on subsequent trading days. Then the earning are evaluated. The proccess stops when a negatie closing price is entered
 import java.util.Scanner;
