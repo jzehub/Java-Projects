@@ -43,7 +43,7 @@ public class Budget {
         }
 
         for(double value : proportion){
-            double expense=value*total/100.0;
+            double expense=value*sAmount/100.0;
             System.out.println("Your " + value + "% equals $ " + expense);
         }
 
