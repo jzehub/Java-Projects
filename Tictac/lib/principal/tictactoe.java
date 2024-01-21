@@ -7,13 +7,12 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Font;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.Scanner;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 
@@ -21,7 +20,7 @@ public class tictactoe extends JPanel implements ActionListener {
 
     //Variables lógicas
 
-    boolean jugadorX; 
+    boolean jugadorX = true; 
     boolean findelJuego= false;
     int ganador = -1;
     int jugador1Gana=0, jugador2Gana=0;
@@ -66,6 +65,7 @@ public class tictactoe extends JPanel implements ActionListener {
 
         botonJugarOtraVez.setVisible(false);
         
+        addMouseListener(new XOListener());
     }
 
     public static void main (String[] args){
@@ -126,7 +126,7 @@ public class tictactoe extends JPanel implements ActionListener {
 
         drawBoard(page);
         drawUI(page);
-        //drawGame(page);
+        drawGame(page);
     }
 
     //Este método nos permite dibujar el tablero
@@ -158,28 +158,163 @@ public class tictactoe extends JPanel implements ActionListener {
 
         page.setColor(blanco);
         page.drawString("Win Count", 320, 30);//Nos permite escribir lo que queremos que se muestre en pantalla, al igual que nos pide su posición
-        page.drawString(": " + jugador1Gana, 362,70);
-        page.drawString(": " + jugador2Gana, 362, 105);
+        page.drawString("X: " + jugador1Gana, 332,70);
+        page.drawString("O: " + jugador2Gana, 332, 105);
 
-        //Imprimiremos nuestro icono de X
+        /*  //Imprimiremos nuestro icono de X
 
+                ImageIcon xIcon = new ImageIcon("orangex.png");
+                Image xImg = xIcon.getImage();
+                page.drawImage(xImg, 329, 47,null);
+            
+            
+
+            //Imprimiremos el 0
+            page.setColor(blanco);
+            page.fillOval(328, 80, 30, 30);
+            page.setColor(gray);
+            page.fillOval(334,85, 19, 19);
+        */
         ImageIcon xIcon = new ImageIcon("orangex.png");
         Image xImg = xIcon.getImage();
-        page.drawImage(xImg, 329, 47,null);
 
-        //Imprimiremos el 0
+        //Ahora mostraremos el turno o el ganador del juego si es el caso
+
         page.setColor(blanco);
-        page.fillOval(328, 80, 30, 30);
-        page.setColor(gray);
-        page.fillOval(334,85, 19, 19);
 
-       
+        Font font1 = new Font("Serif",Font.ITALIC,18);
+        page.setFont(font1);
 
-        
+        if (findelJuego) {
+            //Mostrar ganador
 
+            if (ganador==1) {
+                page.drawString("El ganador es: ", 310, 150);
+                page.drawImage(xImg, 335, 160, null);
 
+            } else if (ganador==2) {
 
-		
+                page.drawString("El ganador es: ", 310, 150);
+                page.setColor(blanco);
+                page.fillOval(332, 160, 50, 50);
+                page.setColor(gray);
+                page.fillOval(342,170, 30, 30);
+
+            }else if (ganador==3){
+                page.drawString("Es un Empate!!",330,178);
+            }
+
+        }else{
+            //Mostrar turno
+
+            Font font2 = new Font("Serif", Font.ITALIC,15);
+            page.setFont(font2);
+            page.drawString("Es el turno de: ", 310, 140);
+
+            if (jugadorX) {
+                page.drawString("X", 350, 170);
+            } else {
+                page.drawString("O", 350, 170);
+            }
+        }
+
+        //Imprimir o dibujar Imagen
+
+        page.setColor(blanco);
+        Font font3 = new Font("Serif", Font.ITALIC,8);
+        page.setFont(font3);
+        page.drawString("Debería haber una imagen aqui", 310, 190);
+
+        try {
+            Image cookie = Toolkit.getDefaultToolkit().getImage("hola.png");
+            page.drawImage(cookie, 345, 235,30,30,this);
+        } catch (Exception e) {
+           System.out.println("El error es: " + e);
+        }
+
 
     }
+
+
+    public void drawGame(Graphics page){
+        tablero[0][0]=1;
+        tablero[0][1]=2;
+        for(int i = 0; i<3; i++){
+            
+            for ( int j = 0; j<3;j++){
+                if (tablero[i][j]==0) {
+                    //no modificamos nada se deja igual
+                    System.out.println("op1");
+                }else if (tablero[i][j]==1){
+
+                   
+
+                    page.setColor(gray);
+                    Font font4 = new Font("Serif", Font.ITALIC,50);
+                    page.setFont(font4);
+                    page.drawString("X", 33 + offset *i, 70 + offset * j);
+
+                     //Esta pendejada no funciona y no se porqueeeee
+                    System.out.println("op2");
+                    ImageIcon xIcon= new ImageIcon("Equis.png");
+                    Image xImg = xIcon.getImage();
+                    page.drawImage(xImg, 30+offset*1, 30+offset *j,null);
+
+                    page.drawString("X", i, j);
+                }else if (tablero[i][j]==2){
+                    System.out.println("op3");
+                    page.setColor(blanco);
+                    page.fillOval(30 + offset*i, 30 + offset *j, 50, 50);
+                    page.setColor(turtle);
+                    page.fillOval(40 + offset * i, 40 + offset * j, 30, 30);
+                }
+            }
+        }
+    }
+
+    public class XOListener implements MouseListener {
+
+        //Estos son los métodos que contiene la clase MouseListener
+
+        @Override
+        public void mouseClicked(MouseEvent event) {
+            // TODO Auto-generated method stub
+
+            selX = -1;
+            selY = -1;
+            if (findelJuego == false) {
+                a = event.getX();
+                b = event.getY();
+                System.out.println("Clicker => x: " + a +  "y" + b);
+            }
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'mouseEntered'");
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'mouseExited'");
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'mousePressed'");
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'mouseReleased'");
+        }
+
+        
+        
+    }
+
 }
