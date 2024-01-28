@@ -62,7 +62,8 @@ public class tictactoe extends JPanel implements ActionListener {
         botonJugarOtraVez = new JButton("Jugar Otra vez");
         //agregamos un evento para que el boton realice una accion cada vez que el usuario de click en el
         botonJugarOtraVez.addActionListener(this);
-
+        add(botonJugarOtraVez);
+       
         botonJugarOtraVez.setVisible(false);
         
         addMouseListener(new XOListener());
@@ -237,14 +238,14 @@ public class tictactoe extends JPanel implements ActionListener {
 
 
     public void drawGame(Graphics page){
-        tablero[0][0]=1;
-        tablero[0][1]=2;
+        tablero[0][0]=0;
+        tablero[0][1]=0;
         for(int i = 0; i<3; i++){
             
             for ( int j = 0; j<3;j++){
                 if (tablero[i][j]==0) {
                     //no modificamos nada se deja igual
-                    System.out.println("op1");
+                 
                 }else if (tablero[i][j]==1){
 
                    
@@ -255,14 +256,13 @@ public class tictactoe extends JPanel implements ActionListener {
                     page.drawString("X", 33 + offset *i, 70 + offset * j);
 
                      //Esta pendejada no funciona y no se porqueeeee
-                    System.out.println("op2");
                     ImageIcon xIcon= new ImageIcon("Equis.png");
                     Image xImg = xIcon.getImage();
                     page.drawImage(xImg, 30+offset*1, 30+offset *j,null);
 
                     page.drawString("X", i, j);
                 }else if (tablero[i][j]==2){
-                    System.out.println("op3");
+                  
                     page.setColor(blanco);
                     page.fillOval(30 + offset*i, 30 + offset *j, 50, 50);
                     page.setColor(turtle);
@@ -274,7 +274,7 @@ public class tictactoe extends JPanel implements ActionListener {
 
     public class XOListener implements MouseListener {
 
-        //Estos son los métodos que contiene la clase MouseListener
+        //Estos son los métodos que contiene la clase MouseListener 
 
         @Override
         public void mouseClicked(MouseEvent event) {
@@ -283,38 +283,168 @@ public class tictactoe extends JPanel implements ActionListener {
             selX = -1;
             selY = -1;
             if (findelJuego == false) {
+
+                //Esto nos permite registrar la posición tanto en x como en Y donde el mouse ha hecho click
                 a = event.getX();
                 b = event.getY();
-                System.out.println("Clicker => x: " + a +  "y" + b);
+                System.out.println("Clicker => x: " + a +  " y: " + b);
+
+                //Ahora definiremos un rango de valores en x y Y que nos servira para determinar donde el usuario quiere poner su X o O
+
+                if (a>12 && a<99) {
+                    selX=0; //Esto indica que si el usuario hizo click en una posición de la pantalla entre 12 y 99, registrara el click y entonces el valor de selX sera 0 indicando que esta "llena" esa posición
+
+                } else if(a>103 && a<195){
+                    selX=1;
+                }else if (a>200 && a<287){
+                    selX=2;
+                }else{selX=-1;}
+
+
+                if (b>12 && b<99) {
+                    selY=0;
+                } else if(b>103 && b<195) {
+                    selY=1;
+                }else if (b>200 && b<287){
+
+                    selY=2;
+                }else {selY=-1;}
+
+                //Ahora nos aseguraremos que ese sea un espacio donde se pueda jugar
+
+                if(selX != - 1 && selY!= -1){
+
+                    //Es valido jugar
+
+                    if (tablero[selX][selY] == 0) {
+                        if (jugadorX) {
+                            tablero[selX][selY]=1;
+                            jugadorX=false;
+                        }else{
+                            tablero[selX][selY]=2;
+                            jugadorX=true;
+                        }
+
+                        System.out.println("Click => x: " + a + ", y: " + b + " board : (" + x  +", " + y + ")");
+                        verificarGanador();
+                    }
+
+                }else{
+                    System.out.println("Click inválido");
+                }
             }
         }
 
         @Override
         public void mouseEntered(MouseEvent e) {
             // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'mouseEntered'");
         }
 
         @Override
         public void mouseExited(MouseEvent e) {
             // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'mouseExited'");
+           
         }
 
         @Override
         public void mousePressed(MouseEvent e) {
             // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'mousePressed'");
+           
         }
-
         @Override
         public void mouseReleased(MouseEvent e) {
             // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'mouseReleased'");
+            
         }
 
         
         
     }
+
+
+    public void verificarGanador(){
+
+        if (findelJuego==true) {
+            System.out.println("Juego terminado");
+            return;
+        }
+
+        //Verificaremos si el jugador gano con un línea vertical
+
+        int temp = -1;
+        if((tablero[0][0] == tablero[0][1]) && (tablero[0][1] == tablero[0][2]) && (tablero[0][0]==0)){
+
+            temp= tablero[0][0];
+
+        }else if ((tablero[1][0] == tablero[1][1]) &&(tablero[1][1] == tablero[1][2]) && (tablero[1][0]!=0) ){
+
+            temp = tablero[1][0];
+
+        }else if ((tablero[2][0] == tablero[2][1])&& (tablero[2][1] == tablero[2][2]) &&(tablero[2][0] != 0)){
+
+            temp = tablero[2][0];
+
+        }//Horizontal
+        else if((tablero[0][0]== tablero [1][0])&&(tablero[1][0] == tablero[2][0]) && (tablero[0][0] != 0)){
+
+            temp = tablero[0][0];
+
+        }else if ((tablero[0][1] == tablero [1][1]) && (tablero [1][1]== tablero[2][1]) && (tablero[0][1]!=0)){
+
+            temp = tablero [0][1];
+
+        }else if ((tablero[0][2] == tablero[1][2])&& (tablero[1][2] == tablero [2][2])&&(tablero[0][2]!=0)){
+
+            temp = tablero[0][2];
+
+        }//Diagonal
+
+        else if ((tablero[0][0]==tablero[1][1])&&(tablero[1][1]==tablero[2][2])&&(tablero[0][0]!=0)){
+
+            temp = tablero[0][0];
+
+        }else if ((tablero[2][0]== tablero[1][1]) && (tablero[1][1]==tablero[0][2])&&(tablero[2][0]!=0)){
+            temp= tablero[2][0];
+        }else{
+            //ahora verificaremos que no haya espacios vaciós o que haya un empate
+
+            boolean sinTerminar = false;
+            for(int i = 0; i<3;i++){
+                for(int j= 0; j<3;j++){
+                        if(tablero[i][j]==0){
+                            sinTerminar = false;
+                            break;
+                        }
+                }
+            }
+
+            if (sinTerminar== false){
+                temp=3;
+            }
+
+            if (temp>0) {
+                ganador=temp;
+                if(ganador == 1){
+                    jugador1Gana++;
+                    System.out.println("Ganan las X");
+                }else if ( ganador == 2){
+                    jugador2Gana++;
+                    System.out.println("Ganan los O");
+                }else if ( ganador == 3){
+                    System.out.println("Es un empate");
+                }
+
+                sinTerminar=true;
+
+                getJButton().setVisible(true);
+
+            }
+
+        }
+
+    }
+
+
+
 
 }
