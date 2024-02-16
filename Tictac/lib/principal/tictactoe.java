@@ -12,7 +12,6 @@ import java.util.Scanner;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 
@@ -20,10 +19,10 @@ public class tictactoe extends JPanel implements ActionListener {
 
     //Variables lógicas
 
-    boolean jugadorX = true; 
+    boolean jugadorX = true;  //Diferente
     boolean findelJuego= false;
     int ganador = -1;
-    int jugador1Gana=0, jugador2Gana=0;
+    int jugador1Gana = 0, jugador2Gana=0;
     int [][] tablero = new int[3][3];
 
     //Variables de diseño
@@ -34,7 +33,8 @@ public class tictactoe extends JPanel implements ActionListener {
     int offset=95;//tamaño del cuadrado
     int a =0;
     int b = 5;
-    int selX=0,  selY=0; //Esto guarda la posicon en que el mouse hace click;
+    int selX=0;
+    int selY=0; //Esto guarda la posicon en que el mouse hace click;
 
     //Colores
 
@@ -44,7 +44,7 @@ public class tictactoe extends JPanel implements ActionListener {
     Color gray= new Color (0x3f3f44);
 
     //Componentes
-     JButton botonJugarOtraVez;
+     JButton jButton;
 
 
     public tictactoe(){
@@ -58,52 +58,14 @@ public class tictactoe extends JPanel implements ActionListener {
         setMinimumSize(size);
         //Al ser el minimo y el maximo el mismo tamaño quiere decir que la ventana no puede redimensionarse
 
-        //Creamos el boton de jugar otra vez
-        botonJugarOtraVez = new JButton("Jugar Otra vez");
-        //agregamos un evento para que el boton realice una accion cada vez que el usuario de click en el
-        botonJugarOtraVez.addActionListener(this);
-        add(botonJugarOtraVez);
-       
-        botonJugarOtraVez.setVisible(false);
+       jButton = new JButton("Jugar otra vez");
+       jButton.addActionListener(this);
+       add(jButton);
+       jButton.setVisible(false);
+      
+       addMouseListener(new XOListener());
         
-        addMouseListener(new XOListener());
-    }
-
-    public static void main (String[] args){
-
-        //Creamos un objeto JFrame que sera nuestra ventana y le damos un nombre
-        JFrame frame = new JFrame("Tic Tac Toe");
-        frame.getContentPane();
-
-        //Ahora creamos un objeto de nuestra clase main que es la que contiene nuestra ventana de TicTactoe y la agregamos el JFrame que contiene los elementos para diseñar
-        tictactoe tPanel = new tictactoe();
-        frame.add(tPanel);
-
-        //Estas son configuraciones básicas para nuestra ventana
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Nos permite cerrar la aplicacion luego que el usuario cierre la ventana
-        frame.setResizable(false); //Nos permite negar la capacidad del usuario para redimensionar la ventana
-        frame.pack();
-        frame.setVisible(true);//Muestra la ventana
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
-        resetGame();
-    }
-
-
-    //Vamos a crear getters y setters para nuestras variables
-
-    public JButton getJButton(){
-        return botonJugarOtraVez;
-    }
-
-    public void setjugador1Gana(int a){
-        jugador1Gana = a;
-    }
-    public void setjugador2Gana(int a){
-        jugador2Gana = a;
+        
     }
 
     public void resetGame(){
@@ -121,6 +83,7 @@ public class tictactoe extends JPanel implements ActionListener {
         //Ahora vamos a ocultar el boton para que no aparezca mientras la partida sigue en curso
         getJButton().setVisible(false);
     }
+
 
     public void  paintComponent(Graphics page){
         super.paintComponent(page); //Este era el maldito EROR
@@ -143,9 +106,8 @@ public class tictactoe extends JPanel implements ActionListener {
         page.fillRoundRect(y,x, lineaHorizontal, lineaVertical, 5, 30);
         page.fillRoundRect(y + offset,x, lineaHorizontal, lineaVertical, 5, 30);
 
-    }   
+    } 
 
-    //Este método nos permitira diseñar el menu
 
     public void drawUI(Graphics page){
         
@@ -162,27 +124,11 @@ public class tictactoe extends JPanel implements ActionListener {
         page.drawString("X: " + jugador1Gana, 332,70);
         page.drawString("O: " + jugador2Gana, 332, 105);
 
-        /*  //Imprimiremos nuestro icono de X
-
-                ImageIcon xIcon = new ImageIcon("orangex.png");
-                Image xImg = xIcon.getImage();
-                page.drawImage(xImg, 329, 47,null);
-            
-            
-
-            //Imprimiremos el 0
-            page.setColor(blanco);
-            page.fillOval(328, 80, 30, 30);
-            page.setColor(gray);
-            page.fillOval(334,85, 19, 19);
-        */
-        ImageIcon xIcon = new ImageIcon("orangex.png");
-        Image xImg = xIcon.getImage();
+        
 
         //Ahora mostraremos el turno o el ganador del juego si es el caso
 
         page.setColor(blanco);
-
         Font font1 = new Font("Serif",Font.ITALIC,18);
         page.setFont(font1);
 
@@ -190,8 +136,8 @@ public class tictactoe extends JPanel implements ActionListener {
             //Mostrar ganador
 
             if (ganador==1) {
-                page.drawString("El ganador es: ", 310, 150);
-                page.drawImage(xImg, 335, 160, null);
+                page.drawString("El ganador es X: ", 290, 150);
+                //page.drawImage(xImg, 335, 160, null);
 
             } else if (ganador==2) {
 
@@ -202,7 +148,7 @@ public class tictactoe extends JPanel implements ActionListener {
                 page.fillOval(342,170, 30, 30);
 
             }else if (ganador==3){
-                page.drawString("Es un Empate!!",330,178);
+                page.drawString("Es un Empate!!",310,178);
             }
 
         }else{
@@ -224,7 +170,7 @@ public class tictactoe extends JPanel implements ActionListener {
         page.setColor(blanco);
         Font font3 = new Font("Serif", Font.ITALIC,8);
         page.setFont(font3);
-        page.drawString("Debería haber una imagen aqui", 310, 190);
+        page.drawString("Debería haber una imagen aqui", 310, 220);
 
         try {
             Image cookie = Toolkit.getDefaultToolkit().getImage("hola.png");
@@ -236,10 +182,7 @@ public class tictactoe extends JPanel implements ActionListener {
 
     }
 
-
     public void drawGame(Graphics page){
-        tablero[0][0]=0;
-        tablero[0][1]=0;
         for(int i = 0; i<3; i++){
             
             for ( int j = 0; j<3;j++){
@@ -270,13 +213,195 @@ public class tictactoe extends JPanel implements ActionListener {
                 }
             }
         }
+        repaint();
     }
+
+
+
+    public void verificarGanador(){
+
+        if (findelJuego==true) {
+            System.out.println("Juego terminado");
+            return;
+        }
+
+        //Verificaremos si el jugador gano con un línea vertical
+
+        int temp = -1; //Temporal lo que va a hacer es guardar si el valor en una posición específica del tablero es X o O
+
+        if((tablero[0][0] == tablero[0][1]) && (tablero[0][1] == tablero[0][2]) && (tablero[0][0]!=0)){
+
+            temp= tablero[0][0];
+            System.out.println("Vertical1");
+            System.out.println(temp);
+
+        }else if ((tablero[1][0] == tablero[1][1]) &&(tablero[1][1] == tablero[1][2]) && (tablero[1][0]!=0) ){
+
+            temp = tablero[1][0];
+            System.out.println("Vertical2");
+            System.out.println(temp);
+
+        }else if ((tablero[2][0] == tablero[2][1])&& (tablero[2][1] == tablero[2][2]) &&(tablero[2][0] != 0)){
+
+            temp = tablero[2][0];
+            System.out.println("Vertical3");
+            System.out.println(temp);
+
+        }//Horizontal
+        else if((tablero[0][0]== tablero [1][0])&&(tablero[1][0] == tablero[2][0]) && (tablero[0][0] != 0)){
+
+            temp = tablero[0][0];
+            System.out.println("Horizontal1");
+            System.out.println(temp);
+
+        }else if ((tablero[0][1] == tablero [1][1]) && (tablero [1][1]== tablero[2][1]) && (tablero[0][1]!=0)){
+
+            temp = tablero [0][1];
+            System.out.println("Horizontal2");
+            System.out.println(temp);
+
+        }else if ((tablero[0][2] == tablero[1][2])&& (tablero[1][2] == tablero [2][2])&&(tablero[0][2]!=0)){
+
+            temp = tablero[0][2];
+            System.out.println("Horizontal3");
+            System.out.println(temp);
+
+        }//Diagonal
+
+        else if ((tablero[0][0]==tablero[1][1])&&(tablero[1][1]==tablero[2][2])&&(tablero[0][0]!=0)){
+
+            temp = tablero[0][0];
+            System.out.println("Diagonal 1");
+            System.out.println(temp);
+
+        }else if ((tablero[2][0]== tablero[1][1]) && (tablero[1][1]==tablero[0][2])&&(tablero[2][0]!=0)){
+            temp= tablero[2][0];
+            System.out.println("Diagonal2");
+            System.out.println(temp);
+
+        }else{
+            //ahora verificaremos que no haya espacios vaciós o que haya un empate
+
+            boolean sinTerminar = false;
+            for(int i = 0; i<3;i++){
+                for(int j= 0; j<3;j++){
+                        if(tablero[i][j]==0){
+                            sinTerminar = true;
+                            break;
+                        }
+                }
+            }
+
+            if (sinTerminar == false){
+                temp=3;
+            }
+
+        }
+
+        if (temp>0) {
+            ganador=temp;
+            if(ganador == 1){
+                jugador1Gana++;
+                System.out.println("Ganan las X");
+            }else if ( ganador == 2){
+                jugador2Gana++;
+                System.out.println("Ganan los O");
+            }else if ( ganador == 3){
+                System.out.println("Es un empate");
+                
+            }
+
+            findelJuego=true;
+            getJButton().setVisible(true);
+
+            
+
+        }
+
+    }
+
+    public JButton getJButton(){
+        return jButton;
+    }
+
+    public void setjugador1Gana(int a){
+        jugador1Gana = a;
+    }
+    public void setjugador2Gana(int a){
+        jugador2Gana = a;
+    }
+
+
+    public static void main (String[] args){
+
+        //Creamos un objeto JFrame que sera nuestra ventana y le damos un nombre
+        JFrame frame = new JFrame("Tic Tac Toe");
+        frame.getContentPane();
+
+        //Ahora creamos un objeto de nuestra clase main que es la que contiene nuestra ventana de TicTactoe y la agregamos el JFrame que contiene los elementos para diseñar
+        tictactoe tPanel = new tictactoe();
+        frame.add(tPanel);
+
+        //Ahora vamos a crear un archivo tipo txt para almacenar al ganador
+        frame.addWindowListener(new WindowAdapter(){
+            public void windowOpened(WindowEvent e){
+
+                try {
+                    File file = new File("score.txt");
+                    Scanner sc = new Scanner(file);
+                    tPanel.setjugador1Gana(Integer.parseInt(sc.nextLine()));
+                    tPanel.setjugador2Gana(Integer.parseInt(sc.nextLine()));
+                }catch(IOException io){
+                    File file = new File("score.txt");
+                }
+
+            }
+
+            public void windowClosed(WindowEvent e){
+
+                try{
+                    PrintWriter pw = new PrintWriter("score.txt");
+                    pw.write(tPanel.jugador1Gana + "\n");
+                    pw.write(tPanel.jugador2Gana + "\n");
+                    pw.close();
+                }catch(FileNotFoundException fe){
+
+                }
+
+            }
+
+
+        });
+
+        //Estas son configuraciones básicas para nuestra ventana
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Nos permite cerrar la aplicacion luego que el usuario cierre la ventana
+        frame.setResizable(false); //Nos permite negar la capacidad del usuario para redimensionar la ventana
+        frame.pack();
+        frame.setVisible(true);//Muestra la ventana
+    }
+
+  
+
+
+    //Vamos a crear getters y setters para nuestras variables
+
+    
+
+    
+
+      
+
+    //Este método nos permitira diseñar el menu
+
+   
+
+
+   
 
     public class XOListener implements MouseListener {
 
         //Estos son los métodos que contiene la clase MouseListener 
 
-        @Override
         public void mouseClicked(MouseEvent event) {
             // TODO Auto-generated method stub
 
@@ -325,8 +450,10 @@ public class tictactoe extends JPanel implements ActionListener {
                             jugadorX=true;
                         }
 
+                       
                         System.out.println("Click => x: " + a + ", y: " + b + " board : (" + x  +", " + y + ")");
                         verificarGanador();
+                        
                     }
 
                 }else{
@@ -335,114 +462,23 @@ public class tictactoe extends JPanel implements ActionListener {
             }
         }
 
-        @Override
-        public void mouseEntered(MouseEvent e) {
-            // TODO Auto-generated method stub
-        }
+        public void mouseEntered(MouseEvent e) {}
 
-        @Override
-        public void mouseExited(MouseEvent e) {
-            // TODO Auto-generated method stub
-           
-        }
+        public void mouseExited(MouseEvent e) {}
 
-        @Override
-        public void mousePressed(MouseEvent e) {
-            // TODO Auto-generated method stub
-           
-        }
-        @Override
-        public void mouseReleased(MouseEvent e) {
-            // TODO Auto-generated method stub
-            
-        }
+        public void mousePressed(MouseEvent e) {}
+
+        public void mouseReleased(MouseEvent e) {}
 
         
         
     }
 
-
-    public void verificarGanador(){
-
-        if (findelJuego==true) {
-            System.out.println("Juego terminado");
-            return;
-        }
-
-        //Verificaremos si el jugador gano con un línea vertical
-
-        int temp = -1;
-        if((tablero[0][0] == tablero[0][1]) && (tablero[0][1] == tablero[0][2]) && (tablero[0][0]==0)){
-
-            temp= tablero[0][0];
-
-        }else if ((tablero[1][0] == tablero[1][1]) &&(tablero[1][1] == tablero[1][2]) && (tablero[1][0]!=0) ){
-
-            temp = tablero[1][0];
-
-        }else if ((tablero[2][0] == tablero[2][1])&& (tablero[2][1] == tablero[2][2]) &&(tablero[2][0] != 0)){
-
-            temp = tablero[2][0];
-
-        }//Horizontal
-        else if((tablero[0][0]== tablero [1][0])&&(tablero[1][0] == tablero[2][0]) && (tablero[0][0] != 0)){
-
-            temp = tablero[0][0];
-
-        }else if ((tablero[0][1] == tablero [1][1]) && (tablero [1][1]== tablero[2][1]) && (tablero[0][1]!=0)){
-
-            temp = tablero [0][1];
-
-        }else if ((tablero[0][2] == tablero[1][2])&& (tablero[1][2] == tablero [2][2])&&(tablero[0][2]!=0)){
-
-            temp = tablero[0][2];
-
-        }//Diagonal
-
-        else if ((tablero[0][0]==tablero[1][1])&&(tablero[1][1]==tablero[2][2])&&(tablero[0][0]!=0)){
-
-            temp = tablero[0][0];
-
-        }else if ((tablero[2][0]== tablero[1][1]) && (tablero[1][1]==tablero[0][2])&&(tablero[2][0]!=0)){
-            temp= tablero[2][0];
-        }else{
-            //ahora verificaremos que no haya espacios vaciós o que haya un empate
-
-            boolean sinTerminar = false;
-            for(int i = 0; i<3;i++){
-                for(int j= 0; j<3;j++){
-                        if(tablero[i][j]==0){
-                            sinTerminar = false;
-                            break;
-                        }
-                }
-            }
-
-            if (sinTerminar== false){
-                temp=3;
-            }
-
-            if (temp>0) {
-                ganador=temp;
-                if(ganador == 1){
-                    jugador1Gana++;
-                    System.out.println("Ganan las X");
-                }else if ( ganador == 2){
-                    jugador2Gana++;
-                    System.out.println("Ganan los O");
-                }else if ( ganador == 3){
-                    System.out.println("Es un empate");
-                }
-
-                sinTerminar=true;
-
-                getJButton().setVisible(true);
-
-            }
-
-        }
-
+    public void actionPerformed(ActionEvent e) {
+        resetGame();
     }
+
+   
 
 
 
