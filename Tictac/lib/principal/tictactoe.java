@@ -19,22 +19,24 @@ public class tictactoe extends JPanel implements ActionListener {
 
     //Variables lógicas
 
-    boolean jugadorX = true;  //Diferente
-    boolean findelJuego= false;
-    int ganador = -1;
-    int jugador1Gana = 0, jugador2Gana=0;
-    int [][] tablero = new int[3][3];
+    boolean jugadorX = true;  //Esta variable no indica si el turno le pertenece al jugador X , si es falso indica que el turno es de las O
+    boolean findelJuego= false; //Con esta determinamos si el juego ha acabado, nos sirve para poder mostrar quien gana
+    int ganador = -1; // Almacena quien es quien gana la partida (1 si es X, 2 si son las O y 3 si es empate)
+    int jugador1Gana = 0, jugador2Gana=0; //Esto es un contador que nos permite almacenar las victorias de cada bando
+    int [][] tablero = new int[3][3]; //Este es nuestro tablero, donde cada casilla tendrá un valor dependiendo si es X,0 o esta libre la casilla
+
+
 
     //Variables de diseño
 
-    int lineaHorizontal=5;
-    int lineaVertical=270;
+    int lineaHorizontal=5; //Almacena el ancho de la línea que divide el tablero
+    int lineaVertical=270; //Almacena el largo de la línea que divide el tablero
     int x = 15, y = 100;// Posicion de la primera línea
-    int offset=95;//tamaño del cuadrado
-    int a =0;
-    int b = 5;
-    int selX=0;
-    int selY=0; //Esto guarda la posicon en que el mouse hace click;
+    int offset=95;//Espacio que existe entre una línea y otra
+    int a; //Almacena la posición en el eje X del usuario
+    int b; //Almacena la posición en el eje Y del usuario
+    int selX=0;//Almacena en que parte del tablero hizo click el usuario en el eje X
+    int selY=0; //Almacena en que parte del tablero hizo click el usuario en el eje Y
 
     //Colores
 
@@ -44,10 +46,13 @@ public class tictactoe extends JPanel implements ActionListener {
     Color gray= new Color (0x3f3f44);
 
     //Componentes
-     JButton jButton;
+    JButton jButton; //Creamos este boton que nos permitirá realizar una acción cuando este sea presionado
 
 
+
+    //Esta clase va a almacenar los componentes y los ajustes que tendrá el juego
     public tictactoe(){
+
         //Creamos un objeto de la clase Dimension, este objeto sera la ventana del juego y le damos los valores de su tamaño
         Dimension size = new Dimension(420,300);
         //Nos permite darle los valores de tamaño preferibles a la ventana
@@ -58,17 +63,22 @@ public class tictactoe extends JPanel implements ActionListener {
         setMinimumSize(size);
         //Al ser el minimo y el maximo el mismo tamaño quiere decir que la ventana no puede redimensionarse
 
-       jButton = new JButton("Jugar otra vez");
-       jButton.addActionListener(this);
+        
+       jButton = new JButton("Jugar otra vez");//Ahora instanciamos nuestro botón y le damos un nombre
+
+       jButton.addActionListener(this);//Al botón le añadimos un método que nos permite "escuchar" cuando el usuario haga click en el botón
        add(jButton);
-       jButton.setVisible(false);
+       jButton.setVisible(false);//Con esto ocultamos el botón con el método setVisible
       
-       addMouseListener(new XOListener());
+       addMouseListener(new XOListener()); //Esto escucha los eventos del ratón, implementando la clases XOListener que contiene métodos a las acciones que hace el mouse
         
         
     }
 
-    public void resetGame(){
+    //Con esta función vamos a "reiniciar el juego"
+
+    public void resetGame(){    
+        //Esta función se encarga de "limpiar" el tablero al igual que reiniciar las variables a su default
         jugadorX=true;
         ganador=-1;
         findelJuego=false;
@@ -85,8 +95,10 @@ public class tictactoe extends JPanel implements ActionListener {
     }
 
 
+    //El método paintComponentes nos sirve para customizar el JPanel donde nuestro código se muestra y se le pasa el objeto de tipo Graphics
     public void  paintComponent(Graphics page){
-        super.paintComponent(page); //Este era el maldito EROR
+        //Le pasamos el parametro al la clase superior que nos ayudara a modificar los componentes
+        super.paintComponent(page); 
 
         drawBoard(page);
         drawUI(page);
@@ -351,6 +363,7 @@ public class tictactoe extends JPanel implements ActionListener {
                     Scanner sc = new Scanner(file);
                     tPanel.setjugador1Gana(Integer.parseInt(sc.nextLine()));
                     tPanel.setjugador2Gana(Integer.parseInt(sc.nextLine()));
+                    sc.close();
                 }catch(IOException io){
                     File file = new File("score.txt");
                 }
@@ -379,24 +392,6 @@ public class tictactoe extends JPanel implements ActionListener {
         frame.pack();
         frame.setVisible(true);//Muestra la ventana
     }
-
-  
-
-
-    //Vamos a crear getters y setters para nuestras variables
-
-    
-
-    
-
-      
-
-    //Este método nos permitira diseñar el menu
-
-   
-
-
-   
 
     public class XOListener implements MouseListener {
 
