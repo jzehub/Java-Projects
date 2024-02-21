@@ -1,9 +1,9 @@
 package calculator.lib;
 //Importamos las librerias a usar
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+    import javax.swing.*;
+    import java.awt.*;
+    import java.awt.event.*;
 
 public class calculadora implements ActionListener{
 
